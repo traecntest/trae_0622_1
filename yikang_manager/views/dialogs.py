@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout, QLineEdit, QComboBox,
     QSpinBox, QDateEdit, QDateTimeEdit, QTextEdit, QPushButton, QLabel,
     QGroupBox, QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox,
-    QCheckBox, QFileDialog, QProgressBar
+    QCheckBox, QFileDialog, QProgressBar, QWidget, QSpacerItem, QSizePolicy
 )
 from PySide6.QtCore import Qt, QDateTime, Signal
 
@@ -75,15 +75,20 @@ class MemberDialog(QDialog):
         layout.addRow("过敏史：", self.allergy_edit)
         layout.addRow("备注：", self.note_edit)
 
-        btn_layout = QHBoxLayout()
+        btn_container = QWidget()
+        btn_layout = QHBoxLayout(btn_container)
+        btn_layout.setContentsMargins(0, 0, 0, 0)
+        btn_layout.addStretch()
         save_btn = QPushButton("保存")
         save_btn.setObjectName("PrimaryButton")
+        save_btn.setMinimumWidth(100)
         save_btn.clicked.connect(self.accept)
         cancel_btn = QPushButton("取消")
+        cancel_btn.setMinimumWidth(100)
         cancel_btn.clicked.connect(self.reject)
         btn_layout.addWidget(save_btn)
         btn_layout.addWidget(cancel_btn)
-        layout.addRow(btn_layout)
+        layout.addRow(btn_container)
 
     def get_data(self):
         return {
@@ -157,15 +162,20 @@ class RecordDialog(QDialog):
         layout.addRow("参考范围：", self.ref_edit)
         layout.addRow("备注：", self.note_edit)
 
-        btn_layout = QHBoxLayout()
+        btn_container = QWidget()
+        btn_layout = QHBoxLayout(btn_container)
+        btn_layout.setContentsMargins(0, 0, 0, 0)
+        btn_layout.addStretch()
         save_btn = QPushButton("保存")
         save_btn.setObjectName("PrimaryButton")
+        save_btn.setMinimumWidth(100)
         save_btn.clicked.connect(self.accept)
         cancel_btn = QPushButton("取消")
+        cancel_btn.setMinimumWidth(100)
         cancel_btn.clicked.connect(self.reject)
         btn_layout.addWidget(save_btn)
         btn_layout.addWidget(cancel_btn)
-        layout.addRow(btn_layout)
+        layout.addRow(btn_container)
 
         self._on_indicator_changed()
 
@@ -245,15 +255,20 @@ class ReminderDialog(QDialog):
         layout.addRow("重复规则：", self.repeat_combo)
         layout.addRow("内容：", self.content_edit)
 
-        btn_layout = QHBoxLayout()
+        btn_container = QWidget()
+        btn_layout = QHBoxLayout(btn_container)
+        btn_layout.setContentsMargins(0, 0, 0, 0)
+        btn_layout.addStretch()
         save_btn = QPushButton("保存")
         save_btn.setObjectName("PrimaryButton")
+        save_btn.setMinimumWidth(100)
         save_btn.clicked.connect(self.accept)
         cancel_btn = QPushButton("取消")
+        cancel_btn.setMinimumWidth(100)
         cancel_btn.clicked.connect(self.reject)
         btn_layout.addWidget(save_btn)
         btn_layout.addWidget(cancel_btn)
-        layout.addRow(btn_layout)
+        layout.addRow(btn_container)
 
     def get_data(self):
         return {
@@ -312,15 +327,20 @@ class MedicationDialog(QDialog):
         layout.addRow("结束日期：", self.end_edit)
         layout.addRow("备注：", self.note_edit)
 
-        btn_layout = QHBoxLayout()
+        btn_container = QWidget()
+        btn_layout = QHBoxLayout(btn_container)
+        btn_layout.setContentsMargins(0, 0, 0, 0)
+        btn_layout.addStretch()
         save_btn = QPushButton("保存")
         save_btn.setObjectName("PrimaryButton")
+        save_btn.setMinimumWidth(100)
         save_btn.clicked.connect(self.accept)
         cancel_btn = QPushButton("取消")
+        cancel_btn.setMinimumWidth(100)
         cancel_btn.clicked.connect(self.reject)
         btn_layout.addWidget(save_btn)
         btn_layout.addWidget(cancel_btn)
-        layout.addRow(btn_layout)
+        layout.addRow(btn_container)
 
     def get_data(self):
         return {
@@ -372,15 +392,20 @@ class HistoryDialog(QDialog):
         layout.addRow("当前状态：", self.status_combo)
         layout.addRow("病情描述：", self.desc_edit)
 
-        btn_layout = QHBoxLayout()
+        btn_container = QWidget()
+        btn_layout = QHBoxLayout(btn_container)
+        btn_layout.setContentsMargins(0, 0, 0, 0)
+        btn_layout.addStretch()
         save_btn = QPushButton("保存")
         save_btn.setObjectName("PrimaryButton")
+        save_btn.setMinimumWidth(100)
         save_btn.clicked.connect(self.accept)
         cancel_btn = QPushButton("取消")
+        cancel_btn.setMinimumWidth(100)
         cancel_btn.clicked.connect(self.reject)
         btn_layout.addWidget(save_btn)
         btn_layout.addWidget(cancel_btn)
-        layout.addRow(btn_layout)
+        layout.addRow(btn_container)
 
     def get_data(self):
         return {

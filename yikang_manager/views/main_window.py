@@ -6,7 +6,7 @@
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
     QStackedWidget, QFrame, QLineEdit, QMessageBox, QStatusBar, QMenu,
-    QSystemTrayIcon, QApplication
+    QSystemTrayIcon, QApplication, QButtonGroup
 )
 from PySide6.QtCore import Qt, Signal, QSize
 from PySide6.QtGui import QAction, QIcon
@@ -77,13 +77,18 @@ class MainWindow(QMainWindow):
             ("全局搜索", 4),
         ]
         self.nav_buttons = []
+        self.button_group = QButtonGroup(self)
+        self.button_group.setExclusive(True)
         for text, idx in nav_items:
             btn = QPushButton(f"  {text}")
             btn.setObjectName("NavButton")
             btn.setCheckable(True)
-            btn.clicked.connect(lambda checked, i=idx: self._switch_view(i))
+            btn.setMinimumHeight(40)
+            btn.setCursor(Qt.PointingHandCursor)
+            self.button_group.addButton(btn, idx)
             self.nav_buttons.append(btn)
             nav_layout.addWidget(btn)
+        self.button_group.buttonClicked.connect(self._on_nav_clicked)
         self.nav_buttons[0].setChecked(True)
 
         nav_layout.addStretch()
@@ -201,12 +206,20 @@ class MainWindow(QMainWindow):
         sb.showMessage("就绪 - 数据已加密保护")
         self.setStatusBar(sb)
 
+    def _on_nav_clicked(self, button):
+        idx = self.button_group.id(button)
+        if idx >= 0:
+            self._switch_view(idx)
+
     def _switch_view(self, index):
         self.stack.setCurrentIndex(index)
         titles = ["健康仪表盘", "档案中心", "数据分析", "提醒设置", "全局搜索"]
         self.page_title.setText(titles[index])
-        for i, btn in enumerate(self.nav_buttons):
-            btn.setChecked(i == index)
+        btn = self.button_group.button(index)
+        if btn and not btn.isChecked():
+            self.button_group.blockSignals(True)
+            btn.setChecked(True)
+            self.button_group.blockSignals(False)
         view = self.stack.widget(index)
         if hasattr(view, "refresh"):
             view.refresh()
