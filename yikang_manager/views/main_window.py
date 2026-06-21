@@ -191,15 +191,36 @@ class MainWindow(QMainWindow):
             self.tray.setToolTip(f"{APP_NAME} - 运行中")
             menu = QMenu(self)
             show_action = QAction("显示主窗口", self)
-            show_action.triggered.connect(self.showNormal)
-            quit_action = QAction("退出", self)
+            show_action.triggered.connect(self._show_window)
+            minimize_action = QAction("最小化到托盘", self)
+            minimize_action.triggered.connect(self._minimize_to_tray)
+            quit_action = QAction("完全退出", self)
             quit_action.triggered.connect(self._quit_app)
             menu.addAction(show_action)
+            menu.addAction(minimize_action)
+            menu.addSeparator()
             menu.addAction(quit_action)
             self.tray.setContextMenu(menu)
+            self.tray.activated.connect(self._on_tray_activated)
             self.tray.show()
             Notifier._tray = self.tray
             Notifier.show_message(APP_NAME, f"{APP_NAME}已启动，正在守护您的家庭健康。")
+
+    def _on_tray_activated(self, reason):
+        if reason == QSystemTrayIcon.DoubleClick:
+            self._show_window()
+
+    def _show_window(self):
+        self.showNormal()
+        self.activateWindow()
+        self.raise_()
+
+    def _minimize_to_tray(self):
+        self.hide()
+        if hasattr(self, "tray") and self.tray.isVisible():
+            Notifier.show_message(
+                APP_NAME, "程序已最小化到系统托盘，后台提醒持续运行。"
+            )
 
     def _setup_statusbar(self):
         sb = QStatusBar()
@@ -264,14 +285,30 @@ class MainWindow(QMainWindow):
             self.search._search()
 
     def _quit_app(self):
+        self._force_quit = True
         reminder_service.shutdown()
+        if hasattr(self, "tray"):
+            self.tray.hide()
         QApplication.quit()
 
     def closeEvent(self, event):
-        if hasattr(self, "tray") and self.tray.isVisible():
-            self.hide()
-            event.ignore()
-            Notifier.show_message(APP_NAME, "程序已最小化到系统托盘，后台提醒持续运行。")
-        else:
-            reminder_service.shutdown()
+        if getattr(self, "_force_quit", False):
             event.accept()
+            return
+        reply = QMessageBox.question(
+            self, "确认退出",
+            "确定要退出颐康管家吗？\n\n"
+            "选择「最小化」将隐藏到系统托盘，后台提醒继续运行。\n"
+            "选择「退出」将完全关闭程序。",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.Yes
+        )
+        if reply == QMessageBox.Yes:
+            self._force_quit = True
+            reminder_service.shutdown()
+            if hasattr(self, "tray"):
+                self.tray.hide()
+            event.accept()
+        else:
+            self._minimize_to_tray()
+            event.ignore()

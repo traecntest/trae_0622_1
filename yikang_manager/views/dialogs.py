@@ -16,6 +16,40 @@ from config import INDICATOR_CATEGORIES, NORMAL_RANGES
 from controllers.ocr_controller import OCRController
 
 
+DIALOG_STYLE = """
+QDialog {
+    background-color: #ffffff;
+}
+QLabel {
+    color: #2c3e50;
+    font-size: 13px;
+}
+QPushButton {
+    color: #2c3e50;
+}
+QPushButton#PrimaryButton {
+    background-color: #2980b9;
+    color: #ffffff;
+    border: 1px solid #21618c;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    min-width: 80px;
+}
+QPushButton#PrimaryButton:hover { background-color: #21618c; }
+QPushButton#PrimaryButton:pressed { background-color: #1a5276; }
+QPushButton#DangerButton {
+    background-color: #c0392b;
+    color: #ffffff;
+    border: 1px solid #922b21;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+QPushButton#DangerButton:hover { background-color: #922b21; }
+"""
+
+
 class MemberDialog(QDialog):
     """家庭成员新增/编辑对话框。"""
 
@@ -24,6 +58,7 @@ class MemberDialog(QDialog):
         self.member = member
         self.setWindowTitle("编辑成员" if member else "新增成员")
         self.setMinimumWidth(420)
+        self.setStyleSheet(DIALOG_STYLE)
         self._setup_ui(parent_members)
 
     def _setup_ui(self, parent_members):
@@ -114,6 +149,7 @@ class RecordDialog(QDialog):
         self.record = record
         self.setWindowTitle("编辑记录" if record else "新增体检记录")
         self.setMinimumWidth(450)
+        self.setStyleSheet(DIALOG_STYLE)
         self._member_id = member_id or (record.member_id if record else None)
         self._setup_ui()
 
@@ -216,6 +252,7 @@ class ReminderDialog(QDialog):
         self.reminder = reminder
         self.setWindowTitle("编辑提醒" if reminder else "新增提醒")
         self.setMinimumWidth(400)
+        self.setStyleSheet(DIALOG_STYLE)
         self._member_id = member_id or (reminder.member_id if reminder else None)
         self._setup_ui()
 
@@ -290,6 +327,7 @@ class MedicationDialog(QDialog):
         self.med = med
         self.setWindowTitle("编辑用药" if med else "新增用药")
         self.setMinimumWidth(400)
+        self.setStyleSheet(DIALOG_STYLE)
         self._member_id = member_id or (med.member_id if med else None)
         self._setup_ui()
 
@@ -364,6 +402,7 @@ class HistoryDialog(QDialog):
         self.history = history
         self.setWindowTitle("编辑病史" if history else "新增病史")
         self.setMinimumWidth(420)
+        self.setStyleSheet(DIALOG_STYLE)
         self._member_id = member_id or (history.member_id if history else None)
         self._setup_ui()
 
@@ -426,6 +465,7 @@ class OCRImportDialog(QDialog):
         super().__init__(parent)
         self.setWindowTitle("OCR 智能识别 - 导入体检报告")
         self.setMinimumWidth(600)
+        self.setStyleSheet(DIALOG_STYLE)
         self._member_id = member_id
         self._ocr = OCRController()
         self._file_path = None

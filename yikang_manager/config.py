@@ -98,16 +98,19 @@ QPushButton#QuickButton:hover {
 QPushButton#PrimaryButton {
     background-color: #2980b9;
     color: white;
-    border: none;
+    border: 1px solid #21618c;
     padding: 8px 16px;
     border-radius: 4px;
     font-size: 13px;
+    font-weight: bold;
+    min-width: 80px;
 }
 QPushButton#PrimaryButton:hover { background-color: #21618c; }
+QPushButton#PrimaryButton:pressed { background-color: #1a5276; }
 QPushButton#DangerButton {
     background-color: #c0392b;
     color: white;
-    border: none;
+    border: 1px solid #922b21;
     padding: 8px 16px;
     border-radius: 4px;
 }

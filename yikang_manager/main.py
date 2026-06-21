@@ -4,6 +4,7 @@
 """
 import sys
 import os
+import signal
 import logging
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -26,7 +27,7 @@ def main():
     app = QApplication(sys.argv)
     app.setApplicationName("颐康管家")
     app.setApplicationVersion("1.0.0")
-    app.setQuitOnLastWindowClosed(False)
+    app.setQuitOnLastWindowClosed(True)
 
     from services.seed_data import init_seed_data
     init_seed_data()
@@ -37,9 +38,20 @@ def main():
     window = MainWindow()
     window.show()
 
+    def cleanup():
+        logger.info("正在清理资源...")
+        try:
+            from services.reminder_service import reminder_service
+            reminder_service.shutdown()
+        except Exception as e:
+            logger.warning(f"清理异常: {e}")
+
+    app.aboutToQuit.connect(cleanup)
+
     logger.info("颐康管家启动成功")
     exit_code = app.exec()
-    sys.exit(exit_code)
+    logger.info(f"应用退出，退出码: {exit_code}")
+    os._exit(exit_code)
 
 
 if __name__ == "__main__":

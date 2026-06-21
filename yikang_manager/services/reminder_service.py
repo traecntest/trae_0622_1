@@ -107,7 +107,10 @@ class ReminderService:
     def shutdown(self):
         """关闭调度器。"""
         if self._initialized and self._scheduler.running:
-            self._scheduler.shutdown(wait=False)
+            try:
+                self._scheduler.shutdown(wait=True)
+            except Exception as e:
+                logger.warning(f"调度器关闭异常: {e}")
             self._initialized = False
 
 
