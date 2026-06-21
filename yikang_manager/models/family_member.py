@@ -63,14 +63,16 @@ class FamilyMember:
 
     @classmethod
     def search(cls, keyword):
-        """模糊搜索家庭成员。"""
-        sql = (
-            "SELECT * FROM family_members WHERE name LIKE ? OR relation LIKE ? "
-            "OR phone LIKE ? OR note LIKE ? ORDER BY id"
-        )
-        kw = f"%{keyword}%"
-        rows = db.fetch_by_query(sql, (kw, kw, kw, kw), table=cls.TABLE)
-        return [cls.from_row(r) for r in rows]
+        """模糊搜索家庭成员（支持加密字段搜索）。"""
+        kw = keyword.strip().lower()
+        results = []
+        for m in cls.all():
+            if kw in (m.name or "").lower() or \
+               kw in (m.relation or "").lower() or \
+               kw in (m.phone or "").lower() or \
+               kw in (m.note or "").lower():
+                results.append(m)
+        return results
 
     def to_dict(self):
         return {

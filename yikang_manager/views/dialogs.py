@@ -275,11 +275,11 @@ class ReminderDialog(QDialog):
             self.time_edit.setDateTime(QDateTime.currentDateTime().addSecs(3600))
 
         self.repeat_combo = QComboBox()
-        self.repeat_combo.addItems(["once", "daily"])
-        self.repeat_combo.setItemData(0, "仅一次")
-        self.repeat_combo.setItemData(1, "每日重复")
+        self.repeat_combo.addItems(["仅一次", "每日重复"])
+        self.repeat_combo.setItemData(0, "once")
+        self.repeat_combo.setItemData(1, "daily")
         if self.reminder and self.reminder.repeat_rule:
-            idx = self.repeat_combo.findText(self.reminder.repeat_rule)
+            idx = self.repeat_combo.findData(self.reminder.repeat_rule)
             if idx >= 0:
                 self.repeat_combo.setCurrentIndex(idx)
 
@@ -313,7 +313,7 @@ class ReminderDialog(QDialog):
             "title": self.title_edit.text().strip(),
             "remind_type": self.type_combo.currentText(),
             "remind_time": self.time_edit.dateTime().toString("yyyy-MM-dd HH:mm"),
-            "repeat_rule": self.repeat_combo.currentText(),
+            "repeat_rule": self.repeat_combo.currentData(),
             "content": self.content_edit.toPlainText().strip(),
             "id": self.reminder.id if self.reminder else None,
         }
